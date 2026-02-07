@@ -51,9 +51,9 @@ const IdCardOnboardModal = ({ isOpen, onClose, onAnalysisComplete }) => {
         formData.append('idCardImage', file);
 
         try {
-            // Using public route to match TestIdCard functionality
-            const res = await axios.post('/api/organizations/analyze-id-card-public', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
+            const res = await axios.post('/api/organizations/analyze-id-card', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+                withCredentials: true
             });
 
             if (res.data.success) {
@@ -61,8 +61,7 @@ const IdCardOnboardModal = ({ isOpen, onClose, onAnalysisComplete }) => {
             }
         } catch (err) {
             console.error("Analysis failed", err);
-            // Enhanced error handling
-            alert(err.response?.data?.message || err.message || "Analysis failed. Please try again.");
+            alert("Analysis failed. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -84,7 +83,7 @@ const IdCardOnboardModal = ({ isOpen, onClose, onAnalysisComplete }) => {
                 <div className="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
                     <div>
                         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                            <Shield className="text-teal-400" /> ID Card Analysis
+                            <Shield className="text-teal-400" /> AI ID Card Analysis
                         </h2>
                         <p className="text-gray-400 text-sm">Upload an ID card to extract validation keywords automatically.</p>
                     </div>
@@ -136,7 +135,7 @@ const IdCardOnboardModal = ({ isOpen, onClose, onAnalysisComplete }) => {
                                     ${loading ? "bg-gray-700 cursor-not-allowed" : "bg-gradient-to-r from-teal-500 to-purple-600 hover:opacity-90"}
                                 `}
                             >
-                                {loading ? <Loader className="animate-spin" size={20} /> : <span className="flex items-center gap-2">Analyze <FileText size={18} /></span>}
+                                {loading ? <Loader className="animate-spin" size={20} /> : <span className="flex items-center gap-2">Analyze with AI <FileText size={18} /></span>}
                             </button>
                         )}
                     </div>
@@ -166,37 +165,26 @@ const IdCardOnboardModal = ({ isOpen, onClose, onAnalysisComplete }) => {
                                         </span>
                                         <span className="text-2xl font-black text-white">{analysis.confidence_score}%</span>
                                     </div>
-
-                                    {/* Institution & Layout Details */}
-                                    {analysis.is_id_card && (
-                                        <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-1 gap-3">
-                                            <div className="bg-white/5 p-3 rounded-lg">
-                                                <h4 className="text-xs text-gray-500 uppercase mb-1 font-bold">Institution</h4>
-                                                <p className="font-medium text-sm text-gray-200">{analysis.institution_name || 'N/A'}</p>
-                                            </div>
-                                            {analysis.signature?.validation_signals?.layout && (
-                                                <div className="bg-white/5 p-3 rounded-lg">
-                                                    <h4 className="text-xs text-gray-500 uppercase mb-1 font-bold">Layout Analysis</h4>
-                                                    <p className="text-xs text-gray-400">{analysis.signature.validation_signals.layout}</p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
                                 </div>
 
                                 {analysis.is_id_card && (
                                     <>
-                                        <div className="bg-green-500/10 border border-green-500/20 p-3 rounded-lg mb-4">
-                                            <p className="text-green-400 text-sm flex items-center gap-2">
-                                                <Check size={16} /> ID Card Pattern Recognized
-                                            </p>
+                                        <div>
+                                            <p className="text-xs text-gray-400 uppercase font-bold mb-2">Detected Keywords</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {analysis.signature?.keywords?.map((k, i) => (
+                                                    <span key={i} className="bg-purple-500/20 text-purple-200 px-3 py-1 rounded-lg text-sm border border-purple-500/30">
+                                                        {k}
+                                                    </span>
+                                                ))}
+                                            </div>
                                         </div>
 
                                         <button
                                             onClick={handleConfirm}
                                             className="w-full mt-auto py-3 bg-white text-black rounded-xl font-bold hover:bg-gray-200 transition flex items-center justify-center gap-2"
                                         >
-                                            <Check size={20} /> Confirm Reference ID Card
+                                            <Check size={20} /> Use These Keywords
                                         </button>
                                     </>
                                 )}

@@ -3,10 +3,10 @@ import axios from '../config/axios';
 import { Settings, Plus, X, Save, ShieldCheck, ArrowLeft, Info, HelpCircle } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useToast } from "../context/toast.context";
-import IdCardOnboardModal from '../components/IdCardOnboardModal';
 
 const SetupEntry = () => {
     const [keywords, setKeywords] = useState([]);
+    const [inputValue, setInputValue] = useState("");
     const [loading, setLoading] = useState(true);
     const [rollNoLength, setRollNoLength] = useState(5);
     const [isIdModalOpen, setIsIdModalOpen] = useState(false);
@@ -35,9 +35,25 @@ const SetupEntry = () => {
         }
     };
 
+    const handleAddKeyword = (e) => {
+        if (e.key === "Enter" && inputValue.trim()) {
+            if (keywords.includes(inputValue.trim())) {
+                addToast("Keyword already exists", "warning");
+                return;
+            }
+            setKeywords([...keywords, inputValue.trim()]);
+            setInputValue("");
+        }
+    };
+
+    const removeKeyword = (index) => {
+        setKeywords(keywords.filter((_, i) => i !== index));
+    };
+
     const handleAnalysisComplete = (extractedKeywords) => {
-        // Replace previous keywords with new ones
-        setKeywords(extractedKeywords);
+        // Merge unique keywords
+        const uniqueKeywords = [...new Set([...keywords, ...extractedKeywords])];
+        setKeywords(uniqueKeywords);
     };
 
 
@@ -81,54 +97,60 @@ const SetupEntry = () => {
                 <div className="absolute top-0 right-0 p-32 bg-indigo-600/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
 
                 <div className="relative z-10 space-y-8">
-                    {/* ID Card Configuration Section */}
+                    {/* Keywords Section */}
                     <div className="space-y-4">
                         <div className="flex items-start justify-between">
                             <label className="block text-sm font-bold text-gray-300 uppercase tracking-wider">
-                                ID Card Configuration
+                                Validation Keywords
                             </label>
-
                             <div className="group relative">
                                 <HelpCircle size={18} className="text-gray-500 cursor-help" />
                                 <div className="absolute right-0 w-64 p-3 bg-black/90 text-xs text-gray-300 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 border border-white/10 mt-2">
-                                    Upload a valid ID card to automatically configure security patterns. This ensures only authentic cards are accepted.
+                                    Add identifying words found on ID cards (e.g., "Student", "College", "Identity", "Valid", "Signature"). At least 6 keywords are required for accurate verification.
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-black/20 rounded-xl p-6 border border-white/5 flex flex-col items-center justify-center text-center">
-                            {keywords.length >= 6 ? (
-                                <div className="space-y-4 w-full">
-                                    <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto border border-green-500/20">
-                                        <ShieldCheck size={32} className="text-green-500" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-lg font-bold text-white">Reference ID Card Configured</h3>
-                                        <p className="text-sm text-gray-400 mt-1">Security patterns have been extracted and saved.</p>
-                                    </div>
-                                    <button
-                                        onClick={() => setIsIdModalOpen(true)}
-                                        className="text-sm text-indigo-400 hover:text-indigo-300 underline"
-                                    >
-                                        Update Reference ID Card
-                                    </button>
-                                </div>
+                        <div className="relative">
+                            <input
+                                type="text"
+                                value={inputValue}
+                                onChange={(e) => setInputValue(e.target.value)}
+                                onKeyDown={handleAddKeyword}
+                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white/10 transition-all font-medium placeholder-gray-600"
+                                placeholder="Type a keyword & press Enter"
+                            />
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                <kbd className="hidden sm:inline-block px-2 py-1 bg-white/10 rounded text-xs text-gray-400 font-mono">ENTER</kbd>
+                            </div>
+                        </div>
+
+                        <div className="bg-black/20 rounded-xl p-4 border border-white/5 min-h-[100px]">
+                            {keywords.length === 0 ? (
+                                <p className="text-gray-600 text-sm p-2 italic">No keywords added yet. Add common words found on your ID cards.</p>
                             ) : (
-                                <div className="space-y-4 py-4">
-                                    <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto border border-white/10">
-                                        <Settings size={32} className="text-gray-500" />
-                                    </div>
-                                    <div>
-                                        <h3 className="text-lg font-bold text-white">No Reference ID Card</h3>
-                                        <p className="text-sm text-gray-400 mt-1">Upload a valid ID card to set up verification.</p>
-                                    </div>
-                                    <button
-                                        onClick={() => setIsIdModalOpen(true)}
-                                        className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold transition shadow-lg shadow-indigo-600/20"
-                                    >
-                                        Upload Reference ID Card
-                                    </button>
+                                <div className="flex flex-wrap gap-2">
+                                    {keywords.map((k, i) => (
+                                        <span key={i} className="bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-2 group hover:bg-indigo-500/20 transition-colors">
+                                            {k}
+                                            <button
+                                                onClick={() => removeKeyword(i)}
+                                                className="text-indigo-400 hover:text-white transition-colors"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </span>
+                                    ))}
                                 </div>
+                            )}
+                        </div>
+
+                        <div className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-wider ${keywords.length >= 6 ? 'text-emerald-400' : 'text-amber-400'
+                            }`}>
+                            {keywords.length >= 6 ? (
+                                <><ShieldCheck size={14} /> Security Requirements Met ({keywords.length}/6+)</>
+                            ) : (
+                                <><Info size={14} /> {6 - keywords.length} more keywords needed for security</>
                             )}
                         </div>
                     </div>
