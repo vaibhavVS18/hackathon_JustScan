@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getStudents, createStudent, getStudent, updateStudent, bulkUploadStudents, deleteStudent } from "../controllers/student.controller.js";
+import { getStudents, createStudent, getStudent, updateStudent, bulkUploadStudents, deleteStudent, getRollNumbers } from "../controllers/student.controller.js";
 import { requirePortalSession } from "../middleware/portal.middleware.js";
 import multer from "multer";
 
@@ -10,6 +10,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.use(requirePortalSession);
 
 router.post("/bulk-upload", upload.single("file"), bulkUploadStudents);
+router.get("/roll-numbers", getRollNumbers);
 router.get("/", getStudents);
 router.post("/", createStudent);
 router.get("/:rollNo", getStudent);
