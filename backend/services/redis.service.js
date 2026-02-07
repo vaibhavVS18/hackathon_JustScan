@@ -6,11 +6,11 @@ const redisClient = new Redis({
     password: process.env.REDIS_PASSWORD,
 });
 
-redisClient.on("connect", () => {
+redisClient.on("connect", ()=>{
     console.log("redis connected");
 })
 
-redisClient.on("error", (err) => {
+redisClient.on("error", (err)=>{
     console.log("Redis error", err);
 })
 

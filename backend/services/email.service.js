@@ -1,24 +1,24 @@
 import nodemailer from 'nodemailer';
 
 export async function sendOTPEmail(email, otp) {
-    // Create transporter
-    const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST, // e.g., smtp.gmail.com
-        port: process.env.EMAIL_PORT || 587,
-        secure: process.env.EMAIL_PORT == 465, // true for 465, false for other ports
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
+  // Create transporter
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST, // e.g., smtp.gmail.com
+    port: process.env.EMAIL_PORT || 587,
+    secure: process.env.EMAIL_PORT == 465, // true for 465, false for other ports
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
 
-    // Email content
-    const mailOptions = {
-        from: `"JustScan Security" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: 'JustScan Verification – OTP Code',
+  // Email content
+  const mailOptions = {
+    from: `"JustScan Security" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: 'JustScan Verification – OTP Code',
 
-        html: `
+    html: `
   <div style="
     font-family: Arial, sans-serif; 
     max-width: 600px; 
@@ -85,30 +85,30 @@ export async function sendOTPEmail(email, otp) {
     </p>
   </div>
   `,
-    };
+  };
 
 
-    // Send email
-    await transporter.sendMail(mailOptions);
+  // Send email
+  await transporter.sendMail(mailOptions);
 }
 
 export async function sendAttendanceReminderEmail(studentEmail, studentName, organizationName, leavingTime) {
-    // Create transporter
-    const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT || 587,
-        secure: process.env.EMAIL_PORT == 465,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
+  // Create transporter
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT || 587,
+    secure: process.env.EMAIL_PORT == 465,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
 
-    const mailOptions = {
-        from: `"${organizationName} - JustScan" <${process.env.EMAIL_USER}>`,
-        to: studentEmail,
-        subject: `[${organizationName}] Attendance Reminder`,
-        html: `
+  const mailOptions = {
+    from: `"${organizationName} - JustScan" <${process.env.EMAIL_USER}>`,
+    to: studentEmail,
+    subject: `[${organizationName}] Attendance Reminder`,
+    html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9fafb; padding: 28px; border-radius: 14px;">
                 <!-- Organization Header -->
                 <div style="text-align: center; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb;">
@@ -148,7 +148,7 @@ export async function sendAttendanceReminderEmail(studentEmail, studentName, org
                 </p>
             </div>
         `,
-    };
+  };
 
-    await transporter.sendMail(mailOptions);
+  await transporter.sendMail(mailOptions);
 }

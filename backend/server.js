@@ -18,19 +18,12 @@ connect();
 const app = express();
 
 // Simplified, Express 5–safe CORS setup
-app.use((req, res, next) => {
-    res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-    res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
-    next();
-});
-
 app.use(
-    cors({
-        origin: ["https://hackathon-just-scan.vercel.app", "http://localhost:5173"],
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        credentials: true,
-    })
+  cors({
+    origin: ["https://just-hack.vercel.app","http://localhost:5173", "http://localhost:5174"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true,
+  })
 );
 
 //       Proper preflight handling for Express 5
@@ -43,7 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 // app.use(cookieParser());
 
 app.get("/", (req, res) => {
-    res.send("hello");
+  res.send("hello");
 });
 
 app.use("/api/users", userRoutes);
@@ -54,5 +47,5 @@ app.use("/api/entries", entryRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(` Server running on http://localhost:${PORT}`);
+  console.log(` Server running on http://localhost:${PORT}`);
 });
