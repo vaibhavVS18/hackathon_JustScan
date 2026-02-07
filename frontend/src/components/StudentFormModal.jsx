@@ -179,21 +179,15 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit = null, onSuccess }) 
                                     <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
                                         <Home size={16} className="text-indigo-400" /> Hostel
                                     </label>
-                                    <div className="relative">
-                                        <select
-                                            name="hostel_name"
-                                            value={formData.hostel_name}
-                                            onChange={handleChange}
-                                            className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all appearance-none"
-                                        >
-                                            <option value="Bhutagni" className="bg-gray-900">Bhutagni</option>
-                                            <option value="Chitaghni" className="bg-gray-900">Chitaghni</option>
-                                            <option value="Jathragni" className="bg-gray-900">Jathragni</option>
-                                        </select>
-                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                                        </div>
-                                    </div>
+                                    <input
+                                        name="hostel_name"
+                                        type="text"
+                                        value={formData.hostel_name}
+                                        onChange={handleChange}
+                                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all"
+                                        placeholder="e.g. Bhutagni"
+                                        required
+                                    />
                                 </div>
 
                                 <div className="space-y-2">

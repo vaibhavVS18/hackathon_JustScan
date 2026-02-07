@@ -33,7 +33,7 @@ const Home = () => {
         elem.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  }, [location, organizations]); // Retrigger when orgs load
+  }, [location, organizations]);
 
   const fetchOrganizations = async () => {
     try {
@@ -91,11 +91,11 @@ const Home = () => {
   };
 
   return (
-    <div className="pb-20 pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div className="pb-20 pt-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
 
       {/* Hero Section */}
-      <div className="lg:flex items-center justify-between mb-20 mt-6 lg:mt-12">
-        <div className="lg:w-1/2 space-y-8">
+      <div className="lg:flex items-center justify-between mb-20 mt-6 lg:mt-12 overflow-hidden">
+        <div className="lg:w-1/2 space-y-8 flex flex-col items-center text-center lg:block lg:text-left">
           <div className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
             <span className="text-emerald-400 font-medium text-sm flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -103,85 +103,121 @@ const Home = () => {
             </span>
           </div>
 
-          <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-            Next-Gen <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500 neon-glow">
-              Identity Security
+          <h1 className="text-6xl lg:text-8xl font-bold leading-tight font-display tracking-tight mb-6">
+            <span className="text-[#00f3ff]">
+              JustScan
             </span>
           </h1>
+
+          <p className="text-gray-300 text-xl lg:text-3xl font-light italic mb-6">
+            "The Future of Secure Entry."
+          </p>
 
           <p className="text-gray-400 text-lg max-w-xl leading-relaxed">
             Seamlessly verify student identities, track campus movement, and maintain secure logs with our intelligent scanning platform.
           </p>
 
-          <div className="flex flex-wrap gap-4 pt-4">
-            <button onClick={() => document.getElementById('org-section').scrollIntoView({ behavior: 'smooth' })} className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full font-semibold text-white shadow-[0_0_20px_rgba(139,92,246,0.5)] hover:shadow-[0_0_30px_rgba(139,92,246,0.7)] transition-all transform hover:-translate-y-1 flex items-center gap-2">
-              Start Scanning <ArrowRight size={20} />
+          <div className="flex flex-wrap gap-4 pt-4 justify-center lg:justify-start">
+            <button
+              onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}
+              className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 rounded-full font-semibold text-white shadow-lg shadow-indigo-500/30 transition-all transform hover:-translate-y-1 flex items-center gap-2"
+            >
+              Explore <ArrowRight size={20} />
             </button>
-            <button className="px-8 py-4 border border-white/10 bg-white/5 rounded-full font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-md">
-              View Logs
+            <button
+              onClick={() => document.getElementById('org-section').scrollIntoView({ behavior: 'smooth' })}
+              className="px-8 py-4 border border-white/10 bg-white/5 rounded-full font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-md"
+            >
+              Entry System
             </button>
           </div>
         </div>
 
-        {/* Hero Visual */}
-        <div className="lg:w-1/2 mt-12 lg:mt-0 relative">
-          {/* <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-blue-500/20 blur-3xl rounded-full" /> */}
-          <div className="relative glass-panel p-8 rounded-2xl border border-white/10 transform rotate-[-5deg] hover:rotate-0 transition-all duration-500">
-            <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full bg-red-500" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                <div className="w-3 h-3 rounded-full bg-green-500" />
-              </div>
-              <div className="text-xs text-gray-400 font-mono">LIVE FEED</div>
+        {/* Scanner Mockup - NEW ADDITION */}
+        <div className="lg:w-1/2 mt-12 lg:mt-0 relative lg:h-[600px] flex items-center justify-center perspective-1000">
+          <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/30 via-transparent to-fuchsia-600/30 blur-[80px] rounded-full transform scale-75 animate-pulse"></div>
+
+          <div className="relative w-[340px] sm:w-[380px] h-[480px] preserve-3d animate-float">
+            {/* Background Card Layer */}
+            <div className="absolute inset-0 bg-[#0a0514]/80 border border-blue-500/20 rounded-2xl backdrop-blur-md shadow-2xl flex flex-col overflow-hidden" style={{ transform: 'translateZ(-40px) translateX(24px) translateY(24px)' }}>
+              <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#3b82f6 1px, transparent 1px), linear-gradient(90deg, #3b82f6 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
             </div>
 
-            <div className="space-y-4">
-              {[1, 2, 3].map((_, i) => (
-                <div key={i} className="flex items-center gap-4 p-3 rounded-xl bg-white/5 border border-white/5">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-gray-700 to-gray-600 animate-pulse" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-2 w-24 bg-gray-600 rounded-full" />
-                    <div className="h-2 w-16 bg-gray-700 rounded-full" />
+            {/* Main Card */}
+            <div className="absolute inset-0 bg-slate-900/90 border border-white/10 rounded-2xl backdrop-blur-xl shadow-[0_0_50px_rgba(37,99,235,0.15)] overflow-hidden flex flex-col">
+              {/* Header */}
+              <div className="h-14 border-b border-white/10 flex items-center justify-between px-6 bg-white/5">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-fuchsia-500 animate-pulse"></div>
+                  <span className="text-xs font-mono text-blue-200 tracking-wider">LIVE SCAN</span>
+                </div>
+                <span className="material-icons-round text-white/40 text-sm">wifi</span>
+              </div>
+
+              {/* Card Content */}
+              <div className="flex-1 relative flex flex-col items-center justify-center p-8">
+                {/* ID Card Preview */}
+                <div className="relative w-full aspect-[1.58/1] bg-gradient-to-br from-slate-800 to-black rounded-xl border border-blue-500/30 p-4 shadow-2xl overflow-hidden group">
+                  <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-gradient-to-b from-white/5 to-transparent rotate-45 pointer-events-none"></div>
+
+                  <div className="flex gap-4 h-full relative z-10">
+                    {/* Photo */}
+                    <div className="w-1/3 h-full rounded bg-slate-700 overflow-hidden relative border border-white/10">
+                      <img
+                        alt="User Avatar"
+                        className="w-full h-full object-cover opacity-80"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOyRzpZ5w5sqOfC2vuBC_rs4BcMLnsaR-Av-yBSBzf_HXroMxkje5FSdQy-YidNuo8jpNRfvhO-aLKTzQBMT9VxnxADCKIpvHO2Ht0YcKP8b72A99BJNOVXW4_KoFRHsEpeMc-_Ea7RlVcTPrHJAxjjKTuYXEbuFbf_x8ZaHl_oDLpK3yMShDGXalSAJn3o6HLGcAIfKdffaL2bpaAwd0RItpUHD_Arj2JxoWCr0xCKSJ9CJOWIOv5zEEr8RMkcjk0P4WvxKWh8Q"
+                      />
+                      <div className="absolute inset-0 bg-blue-500/10 mix-blend-overlay"></div>
+                    </div>
+
+                    {/* Info */}
+                    <div className="flex-1 flex flex-col justify-between py-1">
+                      <div>
+                        <p className="text-[9px] text-blue-400 uppercase tracking-widest mb-0.5">Name</p>
+                        <h4 className="text-white font-display font-bold text-lg leading-tight">VERIFIED USER</h4>
+                      </div>
+                      <div>
+                        <p className="text-[9px] text-blue-400 uppercase tracking-widest mb-0.5">ID Number</p>
+                        <p className="text-blue-100 font-mono text-sm tracking-wide">STU-00124</p>
+                      </div>
+                      <div className="mt-1">
+                        <div className="inline-block px-2 py-0.5 rounded-sm bg-blue-500/20 border border-blue-500/30 text-[9px] text-blue-300 font-bold uppercase">
+                          Access Granted
+                        </div>
+                      </div>
+
+                      {/* Barcode visualization */}
+                      <div className="flex items-end gap-[2px] h-4 mt-1 opacity-50">
+                        <div className="w-0.5 h-full bg-white"></div>
+                        <div className="w-1 h-3 bg-white"></div>
+                        <div className="w-0.5 h-full bg-white"></div>
+                        <div className="w-2 h-2 bg-white"></div>
+                        <div className="w-1 h-full bg-white"></div>
+                        <div className="w-0.5 h-3 bg-white"></div>
+                        <div className="w-3 h-full bg-white"></div>
+                        <div className="w-0.5 h-2 bg-white"></div>
+                        <div className="w-1 h-full bg-white"></div>
+                      </div>
+                    </div>
+
+                    {/* Fingerprint Icon */}
+                    <div className="absolute top-3 right-3 opacity-30">
+                      <span className="material-icons-round text-3xl text-white">fingerprint</span>
+                    </div>
                   </div>
                 </div>
-              ))}
+
+                {/* Scan Beam Animation */}
+                <div className="absolute inset-x-0 h-1 bg-fuchsia-500 shadow-[0_0_15px_#d946ef] animate-scan-beam z-20 opacity-90 pointer-events-none"></div>
+                <div className="absolute inset-x-0 h-12 bg-gradient-to-b from-fuchsia-500/20 to-transparent animate-scan-beam z-10 pointer-events-none" style={{ transform: 'translateY(-100%)' }}></div>
+              </div>
+
+              {/* Footer Text */}
+              <div className="p-6 pt-0 text-center">
+                <p className="text-xs font-mono text-blue-400/60">Align ID card within the frame</p>
+              </div>
             </div>
-
-            {/* Scanner Beam Effect */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-full bg-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,1)] animate-scan-y opacity-50" />
-          </div>
-        </div>
-      </div>
-
-      {/* Stats Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
-        <div className="glass-panel p-6 rounded-2xl flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-blue-500/20 text-blue-400">
-            <Users size={24} />
-          </div>
-          <div>
-            <div className="text-2xl font-bold">5,000+</div>
-            <div className="text-sm text-gray-400">Verified Entries</div>
-          </div>
-        </div>
-        <div className="glass-panel p-6 rounded-2xl flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-purple-500/20 text-purple-400">
-            <Shield size={24} />
-          </div>
-          <div>
-            <div className="text-2xl font-bold">99.9%</div>
-            <div className="text-sm text-gray-400">System Uptime</div>
-          </div>
-        </div>
-        <div className="glass-panel p-6 rounded-2xl flex items-center gap-4">
-          <div className="p-3 rounded-xl bg-green-500/20 text-green-400">
-            <Database size={24} />
-          </div>
-          <div>
-            <div className="text-2xl font-bold">Zero</div>
-            <div className="text-sm text-gray-400">Data Breaches</div>
           </div>
         </div>
       </div>
@@ -193,9 +229,6 @@ const Home = () => {
 
       {/* Features Section */}
       <div id="features" className="flex flex-col pt-0 pb-12 relative scroll-mt-32">
-        {/* Background Elements for Features */}
-        {/* <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-500/10 rounded-full blur-3xl -z-10" /> */}
-
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6 font-display">Why JustScan?</h2>
           <p className="text-gray-400 max-w-2xl mx-auto text-lg">Built for speed, security, and simplicity. Experience the next evolution of campus management.</p>
@@ -209,9 +242,9 @@ const Home = () => {
               <Activity size={32} />
             </div>
 
-            <h3 className="text-3xl font-bold text-white mb-4">Lightning<br />Fast OCR</h3>
+            <h3 className="text-3xl font-bold text-white mb-4">Super Fast<br />Entry</h3>
             <p className="text-gray-400 leading-relaxed text-lg mb-4 flex-grow">
-              Powered by an advanced Tesseract engine with custom pre-processing. Scan ID cards with 99% accuracy in under 200ms.
+              Manage peak rush hours effortlessly. Scan IDs in under a second to keep student movement flowing without delays.
             </p>
             <div className="w-full h-1 bg-gradient-to-r from-blue-500/50 to-transparent mt-4 rounded-full" />
           </div>
@@ -223,9 +256,9 @@ const Home = () => {
               <Shield size={32} />
             </div>
 
-            <h3 className="text-3xl font-bold text-white mb-4">Enterprise<br />Security</h3>
+            <h3 className="text-3xl font-bold text-white mb-4">Always<br />Accurate</h3>
             <p className="text-gray-400 leading-relaxed text-lg mb-4 flex-grow">
-              Bank-grade encryption for all logs. Your campus data never leaves the secure environment. Fully compliant and safe.
+              Stop false entries and wrong data. Our system ensures only authenticated, accurate student records are logged.
             </p>
             <div className="w-full h-1 bg-gradient-to-r from-purple-500/50 to-transparent mt-4 rounded-full" />
           </div>
@@ -237,9 +270,9 @@ const Home = () => {
               <Database size={32} />
             </div>
 
-            <h3 className="text-3xl font-bold text-white mb-4">Real-time<br />Sync</h3>
+            <h3 className="text-3xl font-bold text-white mb-4">No More<br />Writing</h3>
             <p className="text-gray-400 leading-relaxed text-lg mb-4 flex-grow">
-              Instant database updates across all devices. Monitor entry/exit logs as they happen with zero latency.
+              Replace error-prone handwritten logs. Eliminate mistakes caused by manual entry for a trouble-free database.
             </p>
             <div className="w-full h-1 bg-gradient-to-r from-green-500/50 to-transparent mt-4 rounded-full" />
           </div>
@@ -311,8 +344,6 @@ const Home = () => {
               </div>
             </div>
           ))}
-
-
         </div>
       </div>
 
@@ -322,8 +353,6 @@ const Home = () => {
       </div>
 
       <Testimonials />
-
-
 
       <AccessCodeModal
         isOpen={isAccessModalOpen}

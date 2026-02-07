@@ -99,7 +99,7 @@ const Members = () => {
     };
 
     return (
-        <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen">
+        <div className="pt-32 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen">
             <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex items-center space-x-4">
                     <Link to="/portal" className="p-3 rounded-xl glass-panel hover:bg-white/10 transition border border-white/5 group">
@@ -129,13 +129,21 @@ const Members = () => {
                     {members.map((member) => (
                         <div key={member._id} className="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all hover:bg-white/5 group">
                             <div className="flex items-center space-x-4 w-full sm:w-auto">
-                                <div className="h-14 w-14 rounded-full overflow-hidden border-2 border-indigo-500/30 shadow-lg shadow-indigo-500/10">
-                                    <img
-                                        src={member.profileImage}
-                                        alt={member.name}
-                                        className="h-full w-full object-cover"
-                                        onError={(e) => { e.target.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQf1fiSQO7JfDw0uv1Ae_Ye-Bo9nhGNg27dwg&s" }}
-                                    />
+                                <div className="relative">
+                                    <div className="h-14 w-14 rounded-full overflow-hidden border-2 border-indigo-500/30 shadow-lg shadow-indigo-500/10">
+                                        <img
+                                            src={member.profileImage}
+                                            alt={member.name}
+                                            className="h-full w-full object-cover"
+                                            onError={(e) => { e.target.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQf1fiSQO7JfDw0uv1Ae_Ye-Bo9nhGNg27dwg&s" }}
+                                        />
+                                    </div>
+                                    <div className={`absolute -bottom-2 left-1/2 transform -translate-x-1/2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border shadow-sm whitespace-nowrap ${member.role === 'owner' ? 'bg-amber-500 text-black border-amber-400' :
+                                        member.role === 'admin' ? 'bg-indigo-500 text-white border-indigo-400' :
+                                            'bg-green-500 text-black border-green-400'
+                                        }`}>
+                                        {member.role}
+                                    </div>
                                 </div>
                                 <div className="text-center sm:text-left">
                                     <h3 className="text-xl font-bold text-white flex items-center justify-center sm:justify-start gap-2">
@@ -145,14 +153,7 @@ const Members = () => {
                                     <p className="text-gray-400">{member.email}</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
-                                <div className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider border ${member.role === 'owner' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
-                                    member.role === 'admin' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
-                                        'bg-green-500/10 text-green-400 border-green-500/20'
-                                    }`}>
-                                    {member.role.charAt(0).toUpperCase() + member.role.slice(1)}
-                                </div>
-
+                            <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
                                 {isOwner && member.role !== 'owner' && (
                                     <button
                                         onClick={() => handleRemove(member._id, member.name)}

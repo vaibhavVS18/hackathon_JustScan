@@ -8,7 +8,7 @@ router.get("/google", (req, res, next) => {
         scope: ["profile", "email"],
         session: false,
         state: req.query.state     //redirectPage passing in state
-    })(req, res, next);  // ✅ Fixed: Now properly invokes the middleware
+    })(req, res, next);  // Fixed: Now properly invokes the middleware
 });
 
 

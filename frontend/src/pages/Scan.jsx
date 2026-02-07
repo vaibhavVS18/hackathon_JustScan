@@ -296,7 +296,7 @@ const Scan = () => {
     });
 
     return (
-        <div className="pt-24 pb-12 px-4 sm:px-6 font-sans max-w-7xl mx-auto">
+        <div className="pt-32 pb-12 px-4 sm:px-6 font-sans max-w-7xl mx-auto">
             <div className="space-y-6">
 
                 {/* Back Link */}

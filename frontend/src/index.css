@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* =========================
+   Theme Variables
+========================= */
 @theme {
     --color-deep-bg: #050511;
     --color-secondary-bg: #0B0B1E;
@@ -8,16 +11,45 @@
     --color-glass: rgba(255, 255, 255, 0.05);
     --color-glass-border: rgba(255, 255, 255, 0.1);
 
-    /* Background Theme Variables from index.html */
+    /* Background Theme Variables — MATCH DESIGN */
     --color-background-light: #f8fafc;
     --color-background-dark: #05020e;
+    --color-surface-light: #ffffff;
+    --color-surface-dark: #0f0518;
+    --color-border-light: #e2e8f0;
+    --color-border-dark: #1e1b4b;
 
     --font-sans: 'Inter', system-ui, sans-serif;
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
 
     --shadow-neon: 0 0 20px rgba(139, 92, 246, 0.5);
     --shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
+/* =========================
+   Base Layer
+========================= */
+@layer base {
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+
+    body {
+        background-color: #f8fafc;
+        color: #0f172a;
+        font-family: var(--font-sans);
+        overflow-x: hidden;
+    }
+
+    /* EXACT dark mode match with design page */
+    .dark body {
+        background-color: #05020e;
+        color: white;
+    }
+}
+
+/* =========================
+   Dot Background Utilities
+   (MATCH DESIGN PAGE)
+========================= */
 @layer utilities {
     .bg-dots-light {
         background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
@@ -25,22 +57,14 @@
     }
 
     .bg-dots-dark {
-        background-image: radial-gradient(#4f46e5 1px, transparent 1px);
+        background-image: radial-gradient(#312e81 1px, transparent 1px);
         background-size: 32px 32px;
     }
 }
 
-@layer base {
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-    body {
-        background-color: var(--color-background-dark);
-        color: white;
-        font-family: var(--font-sans);
-        overflow-x: hidden;
-    }
-}
-
+/* =========================
+   Glass + Neon Utilities
+========================= */
 @layer utilities {
     .glass-panel {
         background: var(--color-glass);
@@ -68,27 +92,125 @@
         background-size: 30px 30px;
     }
 
-    @keyframes scroll {
-        0% {
-            transform: translateX(0);
-        }
-
-        100% {
-            transform: translateX(-50%);
-        }
-    }
-
-    .animate-scroll {
-        animation: scroll 40s linear infinite;
-    }
-
     .bg-dots-pattern {
         background-image: radial-gradient(#312e81 1px, transparent 1px);
         background-size: 32px 32px;
     }
+
+    .font-display {
+        font-family: var(--font-display);
+    }
 }
 
-/* Custom Scrollbar Styling */
+/* =========================
+   Animations (MATCH DESIGN)
+========================= */
+
+/* Float */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Scan Beam */
+@keyframes scan-beam {
+    0% {
+        top: 0%;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        top: 100%;
+        opacity: 0;
+    }
+}
+
+
+.animate-scan-beam {
+    animation: scan-beam 3s ease-in-out infinite;
+}
+
+/* Slide In Animations */
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.animate-slide-left {
+    animation: slideInLeft 1s ease-out forwards;
+}
+
+.animate-slide-right {
+    animation: slideInRight 1s ease-out forwards;
+}
+
+/* Scroll Animation */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.animate-scroll {
+    animation: scroll 40s linear infinite;
+}
+
+/* 3D */
+.perspective-1000 {
+    perspective: 1000px;
+}
+
+.preserve-3d {
+    transform-style: preserve-3d;
+}
+
+/* =========================
+   Scrollbar — MATCH DESIGN
+========================= */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -106,6 +228,9 @@
     background: #2563eb;
 }
 
+/* =========================
+   Print Styles
+========================= */
 @media print {
     body * {
         visibility: hidden;
@@ -127,7 +252,6 @@
         z-index: 9999;
     }
 
-    /* Hide buttons in print view */
     .no-print {
         display: none !important;
     }

@@ -45,7 +45,7 @@ const Portal = () => {
     if (loading) return <div className="min-h-screen flex items-center justify-center text-white">Loading...</div>;
 
     return (
-        <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="pt-32 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
             <div className="space-y-12">
 
                 {/* Header */}

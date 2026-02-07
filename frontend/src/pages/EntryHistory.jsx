@@ -94,7 +94,7 @@ const EntryHistory = () => {
     };
 
     return (
-        <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen">
+        <div className="pt-32 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen">
             <div className="space-y-6">
                 {/* Back Link */}
                 <Link to="/portal" className="inline-flex items-center text-gray-400 hover:text-white transition-colors">
@@ -173,9 +173,9 @@ const EntryHistory = () => {
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">S.No</th>
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Roll No</th>
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Name</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider hidden sm:table-cell">Hostel</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider hidden md:table-cell">Room</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider hidden lg:table-cell">Mobile</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Hostel</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Room</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Mobile</th>
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Leaving</th>
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Arrival</th>
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Status</th>
@@ -190,11 +190,11 @@ const EntryHistory = () => {
                                     <tr key={entry._id} className="hover:bg-white/5 transition-colors group">
                                         <td className="px-6 py-4 text-sm text-gray-600 font-mono">{index + 1}</td>
                                         <td className="px-6 py-4 text-sm font-bold text-white font-mono">{entry.student.roll_no}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-300 font-medium">{entry.student.name}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-500 hidden sm:table-cell">{entry.student.hostel_name}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-500 hidden md:table-cell">{entry.student.Room_no || '-'}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-500 hidden lg:table-cell">{entry.student.mobile_no || '-'}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-300">
+                                        <td className="px-6 py-4 text-sm text-gray-300 font-medium whitespace-nowrap">{entry.student.name}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{entry.student.hostel_name}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{entry.student.Room_no || '-'}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{entry.student.mobile_no || '-'}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-300 whitespace-nowrap">
                                             <div className="font-medium text-white">{formatDate(entry.leavingTime)}</div>
                                             <div className="text-gray-500 text-xs">{formatTime(entry.leavingTime)}</div>
                                         </td>

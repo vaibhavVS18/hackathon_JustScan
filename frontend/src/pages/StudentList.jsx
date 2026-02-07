@@ -133,7 +133,7 @@ const StudentList = () => {
     };
 
     return (
-        <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen">
+        <div className="pt-32 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen">
             <div className="space-y-6">
 
                 {/* Back Link */}
@@ -210,10 +210,10 @@ const StudentList = () => {
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">#</th>
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Roll No</th>
                                     <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Name</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider hidden md:table-cell">Email</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider hidden sm:table-cell">Hostel</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider hidden lg:table-cell">Room</th>
-                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider hidden xl:table-cell">Mobile</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Email</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Hostel</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Room</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">Mobile</th>
                                     {isOwner && (
                                         <th className="px-6 py-4 text-right text-xs font-bold text-gray-400 uppercase tracking-wider">Actions</th>
                                     )}
@@ -228,11 +228,11 @@ const StudentList = () => {
                                     <tr key={student._id} className="hover:bg-white/5 transition-colors group">
                                         <td className="px-6 py-4 text-sm text-gray-600 font-mono">{index + 1}</td>
                                         <td className="px-6 py-4 text-sm font-bold text-white font-mono">{student.roll_no}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-300 font-medium">{student.name}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-500 hidden md:table-cell">{student.email}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-500 hidden sm:table-cell">{student.hostel_name}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-500 hidden lg:table-cell">{student.Room_no}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-500 hidden xl:table-cell">{student.mobile_no}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-300 font-medium whitespace-nowrap">{student.name}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{student.email}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{student.hostel_name}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{student.Room_no}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{student.mobile_no}</td>
                                         {isOwner && (
                                             <td className="px-6 py-4 text-right flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <button onClick={() => handleEdit(student)} className="text-indigo-400 hover:text-indigo-300 transition p-2 hover:bg-indigo-500/10 rounded-lg">

@@ -78,10 +78,10 @@ const SetupEntry = () => {
         }
     };
 
-    if (loading) return <div className="min-h-screen pt-24 flex items-center justify-center text-lg font-medium text-gray-400">Loading settings...</div>;
+    if (loading) return <div className="min-h-screen pt-32 flex items-center justify-center text-lg font-medium text-gray-400">Loading settings...</div>;
 
     return (
-        <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto min-h-screen">
+        <div className="pt-32 pb-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto min-h-screen">
             <div className="mb-8 flex items-center space-x-4">
                 <Link to="/portal" className="p-3 rounded-xl glass-panel hover:bg-white/10 transition border border-white/5 group">
                     <ArrowLeft className="h-6 w-6 text-gray-400 group-hover:text-white transition-colors" />
