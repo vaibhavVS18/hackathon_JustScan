@@ -234,11 +234,14 @@ export const getRollNumbers = async (req, res) => {
     try {
         const students = await Student.find(
             { organization: req.organization._id },
-            { roll_no: 1, _id: 0 }
+            { roll_no: 1, name: 1, _id: 0 }
         );
-        // Convert to strings to match OCR extraction format
-        const rollNumbers = students.map(s => s.roll_no.toString());
-        res.status(200).json(rollNumbers);
+        // Return objects with rollNo and name for validation
+        const studentData = students.map(s => ({
+            rollNo: s.roll_no.toString(),
+            name: s.name
+        }));
+        res.status(200).json(studentData);
     } catch (error) {
         res.status(500).json({ message: "Error fetching roll numbers" });
     }

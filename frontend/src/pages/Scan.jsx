@@ -32,7 +32,8 @@ const Scan = () => {
 
     const scanMemoryRef = useRef({
         keyword: { value: false, timestamp: 0 },
-        rollNo: { value: null, timestamp: 0 }
+        rollNo: { value: null, timestamp: 0 },
+        name: { value: false, timestamp: 0 }
     });
 
     const isRecent = (timestamp) => {
@@ -42,7 +43,8 @@ const Scan = () => {
     const resetMemory = () => {
         scanMemoryRef.current = {
             keyword: { value: false, timestamp: 0 },
-            rollNo: { value: null, timestamp: 0 }
+            rollNo: { value: null, timestamp: 0 },
+            name: { value: false, timestamp: 0 }
         };
     };
 
@@ -82,7 +84,7 @@ const Scan = () => {
         try {
             const res = await axios.get('/api/students/roll-numbers');
             setValidRollNumbers(res.data);
-            console.log(`Loaded ${res.data.length} valid roll numbers`);
+            console.log(`Loaded ${res.data.length} students with roll numbers and names`);
         } catch (err) {
             console.error("Failed to fetch roll numbers", err);
             addToast("Failed to load student list", "error");
@@ -144,6 +146,16 @@ const Scan = () => {
             }
         };
     }, []);
+
+    // Helper function to generate 4-character substrings from a name
+    const generate4CharSubstrings = (name) => {
+        const substrings = [];
+        const cleanName = name.replace(/\s+/g, ''); // Remove spaces
+        for (let i = 0; i <= cleanName.length - 4; i++) {
+            substrings.push(cleanName.substring(i, i + 4).toLowerCase());
+        }
+        return substrings;
+    };
 
     const captureAndScan = async () => {
         if (!webcamRef.current || isProcessingRef.current || found || !isCameraOn || !isWorkerReady || !workerRef.current) return;
@@ -223,7 +235,7 @@ const Scan = () => {
                 scanMemoryRef.current.keyword = { value: true, timestamp: Date.now() };
             }
 
-            // B. Check Roll No
+            // B. Check Roll No and Name
             const regex = new RegExp(`\\b\\d{${rollNoLength}}\\b`);
             const rollMatch = ocrText.match(regex);
 
@@ -231,8 +243,21 @@ const Scan = () => {
                 const extractedRollNo = rollMatch[0];
 
                 // Frontend Validation: Check if roll number exists in the organization
-                if (validRollNumbers.includes(extractedRollNo)) {
+                const student = validRollNumbers.find(s => s.rollNo === extractedRollNo);
+
+                if (student) {
+                    // Store roll number in memory
                     scanMemoryRef.current.rollNo = { value: extractedRollNo, timestamp: Date.now() };
+
+                    // C. Check Name (4-character substrings)
+                    const nameSubstrings = generate4CharSubstrings(student.name);
+                    const nameFound = nameSubstrings.some(substring =>
+                        lowerText.includes(substring)
+                    );
+
+                    if (nameFound) {
+                        scanMemoryRef.current.name = { value: true, timestamp: Date.now() };
+                    }
                 }
                 // If not in list, don't store it (keep scanning)
             }
@@ -242,16 +267,18 @@ const Scan = () => {
 
             const hasKeyword = isRecent(mem.keyword?.timestamp);
             const hasRoll = isRecent(mem.rollNo?.timestamp);
+            const hasName = isRecent(mem.name?.timestamp);
 
             let statusMsg = `--- RAW TEXT ---\n${ocrText.substring(0, 100)}...\n\n`;
             statusMsg += `--- STATUS ---\n`;
             statusMsg += `Keyword: ${hasKeyword ? 'MATCHED' : 'Seeking...'} \n`;
             statusMsg += `Roll No: ${hasRoll ? 'FOUND (' + mem.rollNo.value + ')' : 'Seeking...'}\n`;
+            statusMsg += `Name: ${hasName ? 'VERIFIED' : 'Seeking...'}\n`;
             statusMsg += `Valid Students Loaded: ${validRollNumbers.length}`;
 
             setDebugText(statusMsg);
 
-            if (hasKeyword && hasRoll) {
+            if (hasKeyword && hasRoll && hasName) {
                 handleScanSuccess(mem.rollNo.value);
             }
 
