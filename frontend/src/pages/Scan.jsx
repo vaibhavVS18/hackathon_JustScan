@@ -28,6 +28,7 @@ const Scan = () => {
     const [hideArrivals, setHideArrivals] = useState(false);
     const [debugText, setDebugText] = useState("");
     const [sendingReminders, setSendingReminders] = useState(false);
+    const [validRollNumbers, setValidRollNumbers] = useState([]);
 
     const scanMemoryRef = useRef({
         keyword: { value: false, timestamp: 0 },
@@ -62,6 +63,7 @@ const Scan = () => {
         }
         fetchRecentEntries();
         fetchOrgDetails(orgId);
+        fetchValidRollNumbers();
         // Do NOT auto-start camera
     }, [navigate]);
 
@@ -73,6 +75,17 @@ const Scan = () => {
         } catch (err) {
             console.error("Failed to fetch organization details", err);
             addToast("Failed to load settings", "error");
+        }
+    };
+
+    const fetchValidRollNumbers = async () => {
+        try {
+            const res = await axios.get('/api/students/roll-numbers');
+            setValidRollNumbers(res.data);
+            console.log(`Loaded ${res.data.length} valid roll numbers`);
+        } catch (err) {
+            console.error("Failed to fetch roll numbers", err);
+            addToast("Failed to load student list", "error");
         }
     };
 
@@ -154,13 +167,11 @@ const Scan = () => {
         // 3. Draw Video to Canvas
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // 4. Image Pre-processing (Grayscale + Contrast)
+        // 4. Image Pre-processing (Gentle Contrast Enhancement)
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
-        // High contrast binarization threshold
-        const threshold = 128;
-
+        // Simple grayscale with contrast boost - preserves detail at all distances
         for (let i = 0; i < data.length; i += 4) {
             const r = data[i];
             const g = data[i + 1];
@@ -169,14 +180,16 @@ const Scan = () => {
             // Grayscale conversion (luminosity)
             let gray = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
-            // Contrast boosting (Simple Binarization)
-            // If lighter than threshold -> White, else -> Black
-            // This removes shadows and color noise
-            let val = gray > 100 ? 255 : 0; // Slightly lower threshold to keep text
+            // Gentle contrast enhancement (preserves gradients, not binary)
+            const contrast = 1.3; // Moderate contrast boost
+            gray = contrast * (gray - 128) + 128;
 
-            data[i] = val;     // R
-            data[i + 1] = val; // G
-            data[i + 2] = val; // B
+            // Clamp to valid range [0, 255]
+            gray = Math.max(0, Math.min(255, gray));
+
+            data[i] = gray;     // R
+            data[i + 1] = gray; // G
+            data[i + 2] = gray; // B
         }
         ctx.putImageData(imageData, 0, 0);
 
@@ -215,7 +228,13 @@ const Scan = () => {
             const rollMatch = ocrText.match(regex);
 
             if (rollMatch) {
-                scanMemoryRef.current.rollNo = { value: rollMatch[0], timestamp: Date.now() };
+                const extractedRollNo = rollMatch[0];
+
+                // Frontend Validation: Check if roll number exists in the organization
+                if (validRollNumbers.includes(extractedRollNo)) {
+                    scanMemoryRef.current.rollNo = { value: extractedRollNo, timestamp: Date.now() };
+                }
+                // If not in list, don't store it (keep scanning)
             }
 
             // --- STEP 2: VALIDATION (Mix & Match) ---
@@ -227,7 +246,8 @@ const Scan = () => {
             let statusMsg = `--- RAW TEXT ---\n${ocrText.substring(0, 100)}...\n\n`;
             statusMsg += `--- STATUS ---\n`;
             statusMsg += `Keyword: ${hasKeyword ? 'MATCHED' : 'Seeking...'} \n`;
-            statusMsg += `Roll No: ${hasRoll ? 'FOUND (' + mem.rollNo.value + ')' : 'Seeking...'}`;
+            statusMsg += `Roll No: ${hasRoll ? 'FOUND (' + mem.rollNo.value + ')' : 'Seeking...'}\n`;
+            statusMsg += `Valid Students Loaded: ${validRollNumbers.length}`;
 
             setDebugText(statusMsg);
 
