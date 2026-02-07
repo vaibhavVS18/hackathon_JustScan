@@ -31,6 +31,7 @@ const Scan = () => {
     const [validRollNumbers, setValidRollNumbers] = useState([]);
     const [loadingEntries, setLoadingEntries] = useState(true);
     const [orgName, setOrgName] = useState("");
+    const [isVerifying, setIsVerifying] = useState(false);
 
     const scanMemoryRef = useRef({
         keyword: { value: false, timestamp: 0 },
@@ -109,6 +110,20 @@ const Scan = () => {
             setLoadingEntries(false);
         }
     };
+
+    // Real-time polling for new entries
+    useEffect(() => {
+        // Poll every 5 seconds when page is visible
+        const pollInterval = setInterval(() => {
+            // Only poll if page is visible
+            if (document.visibilityState === 'visible') {
+                fetchRecentEntries();
+            }
+        }, 5000); // 5 seconds
+
+        // Cleanup interval on unmount
+        return () => clearInterval(pollInterval);
+    }, []);
 
     const handleSendReminders = async () => {
         const unreturnedCount = recentEntries.filter(e => e.status === 'Out').length;
@@ -302,6 +317,7 @@ const Scan = () => {
     const handleScanSuccess = async (rollNo) => {
         setFound(true);
         setIsCameraOn(false);
+        setIsVerifying(true);
 
         try {
             const res = await axios.post('/api/entries/scan', { rollNo });
@@ -320,6 +336,8 @@ const Scan = () => {
                 message: err.response?.data?.message || "Scan failed.",
             });
             addToast("Scan Failed", "error");
+        } finally {
+            setIsVerifying(false);
         }
     };
 
@@ -470,6 +488,20 @@ const Scan = () => {
                         </div>
                     )}
 
+
+                    {/* Verifying State */}
+                    {found && isVerifying && !scanResult && (
+                        <div className="mt-8 glass-panel bg-white/5 p-8 rounded-2xl border border-white/10 max-w-md w-full animate-in fade-in zoom-in duration-300 relative z-20 backdrop-blur-xl mx-auto">
+                            <div className="text-center">
+                                <div className="mx-auto w-16 h-16 bg-indigo-500/20 rounded-full flex items-center justify-center mb-4">
+                                    <div className="w-10 h-10 border-3 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
+                                </div>
+                                <h2 className="text-2xl font-bold text-white mb-2">Securely Verifying...</h2>
+                                <p className="text-gray-400">Please wait while we process your entry</p>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Result Overlay / Panel */}
                     {found && scanResult && (
                         <div className="mt-8 glass-panel bg-white/5 p-6 rounded-2xl border border-white/10 max-w-md w-full animate-in fade-in zoom-in duration-300 relative z-20 backdrop-blur-xl mx-auto">
@@ -607,7 +639,7 @@ const Scan = () => {
                                     const arrivalDate = entry.arrivalTime ? new Date(entry.arrivalTime) : null;
 
                                     return (
-                                        <tr key={entry._id} className="hover:bg-white/5 transition-colors">
+                                        <tr key={entry._id} className={`hover:bg-white/10 transition-colors ${index % 2 === 0 ? 'bg-black/20' : 'bg-transparent'}`}>
                                             <td className="px-4 py-3 font-medium text-gray-500">{recentEntries.length - index}</td>
                                             <td className="px-4 py-3 font-bold text-white">{entry.student.roll_no}</td>
                                             <td className="px-4 py-3">{entry.student.name}</td>
