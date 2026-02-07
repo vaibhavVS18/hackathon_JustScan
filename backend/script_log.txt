@@ -1,0 +1,7 @@
+Script loaded. Starting execution at 2026-02-06T20:44:38.361Z
+Connecting to DB...
+Connected to DB
+Current indexes: [{"v":2,"key":{"_id":1},"name":"_id_"},{"v":2,"key":{"slug":1},"name":"slug_1","unique":true}]
+Index slug_1 dropped successfully.
+Closing connection...
+Disconnected from DB

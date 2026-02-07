@@ -4,9 +4,9 @@ import jwt from "jsonwebtoken";
 
 const userSchema = new mongoose.Schema({
     username: {
-        type: String,
+        type:String,
     },
-    profileImage: {
+    profileImage:{
         type: String,
         default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQf1fiSQO7JfDw0uv1Ae_Ye-Bo9nhGNg27dwg&s"
     },
@@ -37,28 +37,29 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Organization"
     }]
-}, { timestamps: true });
+} , {timestamps: true});
 
-userSchema.statics.hashPassword = async (password) => {
+userSchema.statics.hashPassword =async(password)=>{
     return await bcrypt.hash(password, 10);
 }
 
-userSchema.methods.isValidPassword = async function (password) {
+userSchema.methods.isValidPassword = async function(password){
     return await bcrypt.compare(password, this.password);
 }
 
-userSchema.methods.generateJWT = function () {
+userSchema.methods.generateJWT = function(){
     const userObject = this.toObject();   // Convert Mongoose document to plain object
     delete userObject.password;
 
     return jwt.sign(
-        { user: userObject },
+        {user: userObject},
         process.env.JWT_SECRET,
-        { expiresIn: "7d" }
+        {expiresIn:"7d"}
     )
 };
 
 
-const User = mongoose.model("User", userSchema);
+const User =  mongoose.model("User", userSchema);
 export default User;
+
 

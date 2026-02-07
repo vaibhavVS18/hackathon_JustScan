@@ -231,8 +231,8 @@ export const analyzeIdCard = async (req, res) => {
         }
 
         if (!process.env.GEMINI_API_KEY) {
-            console.error("GEMINI_API_KEY is missing in environment variables.");
-            return res.status(500).json({ success: false, message: "Server misconfiguration: API Key missing" });
+             console.error("GEMINI_API_KEY is missing in environment variables.");
+             return res.status(500).json({ success: false, message: "Server misconfiguration: API Key missing" });
         }
 
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -278,3 +278,4 @@ export const analyzeIdCard = async (req, res) => {
         res.status(500).json({ success: false, message: "AI Analysis failed", error: error.message });
     }
 };
+
