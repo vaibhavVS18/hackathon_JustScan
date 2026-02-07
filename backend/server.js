@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.routes.js";
 import organizationRoutes from "./routes/organization.routes.js";
 import studentRoutes from "./routes/student.routes.js";
 import entryRoutes from "./routes/entry.routes.js";
+import feedbackRoutes from "./routes/feedback.routes.js";
 
 import passport from "./config/passport.js"
 
@@ -20,7 +21,7 @@ const app = express();
 // Simplified, Express 5–safe CORS setup
 app.use(
   cors({
-    origin: ["https://hackathon-just-scan.vercel.app","http://localhost:5173", "http://localhost:5174"],
+    origin: ["https://hackathon-just-scan.vercel.app", "http://localhost:5173", "http://localhost:5174"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
   })
@@ -44,6 +45,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/organizations", organizationRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/entries", entryRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

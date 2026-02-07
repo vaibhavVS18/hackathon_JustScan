@@ -5,7 +5,7 @@ import AccessCodeModal from '../components/AccessCodeModal';
 import CreateOrganizationModal from '../components/CreateOrganizationModal';
 import { UserContext } from '../context/user.context';
 import { ModalContext } from '../context/modal.context';
-import { Shield, Plus, ArrowRight, Activity, Users, Database } from 'lucide-react';
+import { Shield, Plus, ArrowRight, Activity, Users, Database, Send } from 'lucide-react';
 import Testimonials from '../components/home/Testimonials';
 import GenericModal from '../components/GenericModal';
 
@@ -15,6 +15,8 @@ const Home = () => {
   const [genericModal, setGenericModal] = useState({ isOpen: false, type: 'info', title: '', message: '' });
   const [isAccessModalOpen, setIsAccessModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [sendingFeedback, setSendingFeedback] = useState(false);
 
   const location = useLocation();
 
@@ -90,11 +92,51 @@ const Home = () => {
     }
   };
 
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!user) {
+      setIsLoginOpen(true);
+      return;
+    }
+
+    if (!feedbackMessage.trim()) {
+      setGenericModal({
+        isOpen: true,
+        type: 'error',
+        title: 'Empty Message',
+        message: 'Please enter your feedback before sending.'
+      });
+      return;
+    }
+
+    setSendingFeedback(true);
+    try {
+      await axios.post('/api/feedback', { message: feedbackMessage });
+      setGenericModal({
+        isOpen: true,
+        type: 'success',
+        title: 'Thank You!',
+        message: 'Your feedback has been sent successfully. We appreciate your input!'
+      });
+      setFeedbackMessage('');
+    } catch (err) {
+      setGenericModal({
+        isOpen: true,
+        type: 'error',
+        title: 'Error',
+        message: err.response?.data?.message || 'Failed to send feedback. Please try again later.'
+      });
+    } finally {
+      setSendingFeedback(false);
+    }
+  };
+
   return (
     <div className="pb-20 pt-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
 
       {/* Hero Section */}
-      <div className="lg:flex items-center justify-between mb-20 mt-6 lg:mt-12 overflow-hidden">
+      <div className="lg:flex items-center justify-between mb-20 mt-6 lg:mt-6 overflow-hidden">
         <div className="lg:w-1/2 space-y-8 flex flex-col items-center text-center lg:block lg:text-left">
           <div className="inline-block px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
             <span className="text-emerald-400 font-medium text-sm flex items-center gap-2">
@@ -227,73 +269,16 @@ const Home = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent blur-sm"></div>
       </div>
 
-      {/* Features Section */}
-      <div id="features" className="flex flex-col pt-0 pb-12 relative scroll-mt-32">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-6 font-display">Why JustScan?</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto text-lg">Built for speed, security, and simplicity. Experience the next evolution of campus management.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
-          <div className="glass-panel p-10 rounded-[2rem] border border-white/5 hover:border-blue-500/30 transition-all hover:-translate-y-2 duration-300 relative overflow-hidden group flex flex-col min-h-[400px]">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-blue-600/10 rounded-full blur-3xl group-hover:bg-blue-600/20 transition-all"></div>
-
-            <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center text-blue-400 mb-8 font-bold group-hover:scale-110 transition-transform">
-              <Activity size={32} />
-            </div>
-
-            <h3 className="text-3xl font-bold text-white mb-4">Super Fast<br />Entry</h3>
-            <p className="text-gray-400 leading-relaxed text-lg mb-4 flex-grow">
-              Manage peak rush hours effortlessly. Scan IDs in under a second to keep student movement flowing without delays.
-            </p>
-            <div className="w-full h-1 bg-gradient-to-r from-blue-500/50 to-transparent mt-4 rounded-full" />
-          </div>
-
-          <div className="glass-panel p-10 rounded-[2rem] border border-white/5 hover:border-purple-500/30 transition-all hover:-translate-y-2 duration-300 relative overflow-hidden group flex flex-col min-h-[400px]">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-purple-600/10 rounded-full blur-3xl group-hover:bg-purple-600/20 transition-all"></div>
-
-            <div className="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center text-purple-400 mb-8 font-bold group-hover:scale-110 transition-transform">
-              <Shield size={32} />
-            </div>
-
-            <h3 className="text-3xl font-bold text-white mb-4">Always<br />Accurate</h3>
-            <p className="text-gray-400 leading-relaxed text-lg mb-4 flex-grow">
-              Stop false entries and wrong data. Our system ensures only authenticated, accurate student records are logged.
-            </p>
-            <div className="w-full h-1 bg-gradient-to-r from-purple-500/50 to-transparent mt-4 rounded-full" />
-          </div>
-
-          <div className="glass-panel p-10 rounded-[2rem] border border-white/5 hover:border-green-500/30 transition-all hover:-translate-y-2 duration-300 relative overflow-hidden group flex flex-col min-h-[400px]">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-green-600/10 rounded-full blur-3xl group-hover:bg-green-600/20 transition-all"></div>
-
-            <div className="w-16 h-16 bg-green-500/20 rounded-2xl flex items-center justify-center text-green-400 mb-8 font-bold group-hover:scale-110 transition-transform">
-              <Database size={32} />
-            </div>
-
-            <h3 className="text-3xl font-bold text-white mb-4">No More<br />Writing</h3>
-            <p className="text-gray-400 leading-relaxed text-lg mb-4 flex-grow">
-              Replace error-prone handwritten logs. Eliminate mistakes caused by manual entry for a trouble-free database.
-            </p>
-            <div className="w-full h-1 bg-gradient-to-r from-green-500/50 to-transparent mt-4 rounded-full" />
-          </div>
-        </div>
-      </div>
-
-      {/* Section Separator */}
-      <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-24 relative">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent blur-sm"></div>
-      </div>
-
       {/* Organizations Section */}
       <div id="org-section" className="space-y-8 scroll-mt-48">
-        <div className="flex justify-between items-end border-b border-white/10 pb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 border-b border-white/10 pb-6">
           <div>
             <h2 className="text-3xl font-bold">Trusted Organizations</h2>
             <p className="text-gray-400 mt-2">These organizations trust JustScan for their security.</p>
           </div>
           <button
             onClick={handleCreateClick}
-            className="flex items-center px-6 py-3 rounded-full cursor-pointer bg-white/10 hover:bg-white/20 border border-white/10 transition-all text-sm font-medium"
+            className="flex items-center justify-center sm:justify-start px-6 py-3 rounded-full cursor-pointer bg-white/10 hover:bg-white/20 border border-white/10 transition-all text-sm font-medium w-full sm:w-auto"
           >
             <Plus className="h-5 w-5 mr-2" />
             New Organization
@@ -352,7 +337,117 @@ const Home = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent blur-sm"></div>
       </div>
 
+      {/* Features Section */}
+      <div id="features" className="flex flex-col pt-0 pb-12 relative scroll-mt-32">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl lg:text-5xl font-bold mb-6 font-display">Why JustScan?</h2>
+          <p className="text-gray-400 max-w-2xl mx-auto text-lg">Built for speed, security, and simplicity. Experience the next evolution of campus management.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+          <div className="glass-panel p-10 rounded-[2rem] border border-white/5 hover:border-blue-500/30 transition-all hover:-translate-y-2 duration-300 relative overflow-hidden group flex flex-col min-h-[400px]">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-blue-600/10 rounded-full blur-3xl group-hover:bg-blue-600/20 transition-all"></div>
+
+            <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center text-blue-400 mb-8 font-bold group-hover:scale-110 transition-transform">
+              <Activity size={32} />
+            </div>
+
+            <h3 className="text-3xl font-bold text-white mb-4">Super Fast<br />Entry</h3>
+            <p className="text-gray-400 leading-relaxed text-lg mb-4 flex-grow">
+              Manage peak rush hours effortlessly. Scan IDs in under a second to keep student movement flowing without delays.
+            </p>
+            <div className="w-full h-1 bg-gradient-to-r from-blue-500/50 to-transparent mt-4 rounded-full" />
+          </div>
+
+          <div className="glass-panel p-10 rounded-[2rem] border border-white/5 hover:border-purple-500/30 transition-all hover:-translate-y-2 duration-300 relative overflow-hidden group flex flex-col min-h-[400px]">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-purple-600/10 rounded-full blur-3xl group-hover:bg-purple-600/20 transition-all"></div>
+
+            <div className="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center text-purple-400 mb-8 font-bold group-hover:scale-110 transition-transform">
+              <Shield size={32} />
+            </div>
+
+            <h3 className="text-3xl font-bold text-white mb-4">Always<br />Accurate</h3>
+            <p className="text-gray-400 leading-relaxed text-lg mb-4 flex-grow">
+              Stop false entries and wrong data. Our system ensures only authenticated, accurate student records are logged.
+            </p>
+            <div className="w-full h-1 bg-gradient-to-r from-purple-500/50 to-transparent mt-4 rounded-full" />
+          </div>
+
+          <div className="glass-panel p-10 rounded-[2rem] border border-white/5 hover:border-green-500/30 transition-all hover:-translate-y-2 duration-300 relative overflow-hidden group flex flex-col min-h-[400px]">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-green-600/10 rounded-full blur-3xl group-hover:bg-green-600/20 transition-all"></div>
+
+            <div className="w-16 h-16 bg-green-500/20 rounded-2xl flex items-center justify-center text-green-400 mb-8 font-bold group-hover:scale-110 transition-transform">
+              <Database size={32} />
+            </div>
+
+            <h3 className="text-3xl font-bold text-white mb-4">No More<br />Writing</h3>
+            <p className="text-gray-400 leading-relaxed text-lg mb-4 flex-grow">
+              Replace error-prone handwritten logs. Eliminate mistakes caused by manual entry for a trouble-free database.
+            </p>
+            <div className="w-full h-1 bg-gradient-to-r from-green-500/50 to-transparent mt-4 rounded-full" />
+          </div>
+        </div>
+      </div>
+
+      {/* Section Separator */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-24 relative">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent blur-sm"></div>
+      </div>
+
       <Testimonials />
+
+      {/* Section Separator */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-24 relative">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent blur-sm"></div>
+      </div>
+
+      {/* Feedback Section */}
+      <div className="glass-panel rounded-2xl border border-white/5 p-8 md:p-12 max-w-3xl mx-auto">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold mb-3 font-display">Give Your Feedback</h2>
+          <p className="text-gray-400 text-lg">We'd love to hear from you! Share your thoughts and help us improve.</p>
+        </div>
+
+        <form onSubmit={handleFeedbackSubmit} className="space-y-6">
+          <div className="relative">
+            <textarea
+              value={feedbackMessage}
+              onChange={(e) => setFeedbackMessage(e.target.value)}
+              placeholder="Type your feedback here..."
+              disabled={sendingFeedback}
+              rows={6}
+              maxLength={2000}
+              className="w-full px-5 py-4 bg-black/30 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none text-white placeholder-gray-500 resize-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+            <div className="absolute bottom-3 right-3 text-xs text-gray-500">
+              {feedbackMessage.length}/2000
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={!user || sendingFeedback || !feedbackMessage.trim()}
+            className="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-full font-semibold shadow-lg shadow-indigo-500/30 transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2 mx-auto"
+          >
+            {sendingFeedback ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Sending...
+              </>
+            ) : !user ? (
+              <>
+                <Send size={20} />
+                Login Required
+              </>
+            ) : (
+              <>
+                <Send size={20} />
+                Send Feedback
+              </>
+            )}
+          </button>
+        </form>
+      </div>
 
       <AccessCodeModal
         isOpen={isAccessModalOpen}

@@ -29,6 +29,8 @@ const Scan = () => {
     const [debugText, setDebugText] = useState("");
     const [sendingReminders, setSendingReminders] = useState(false);
     const [validRollNumbers, setValidRollNumbers] = useState([]);
+    const [loadingEntries, setLoadingEntries] = useState(true);
+    const [orgName, setOrgName] = useState("");
 
     const scanMemoryRef = useRef({
         keyword: { value: false, timestamp: 0 },
@@ -55,8 +57,12 @@ const Scan = () => {
 
     const navigate = useNavigate();
 
+
     // Check Session & Fetch Data
     useEffect(() => {
+        // Scroll to top when page loads
+        window.scrollTo(0, 0);
+
         const sessionId = localStorage.getItem("portal-session-id");
         const orgId = localStorage.getItem("current-org-id");
         if (!sessionId || !orgId) {
@@ -74,6 +80,7 @@ const Scan = () => {
             const res = await axios.get(`/api/organizations/${orgId}`);
             setValidationKeywords(res.data.validationKeywords || []);
             setRollNoLength(res.data.rollNoLength || 5);
+            setOrgName(res.data.name || "");
         } catch (err) {
             console.error("Failed to fetch organization details", err);
             addToast("Failed to load settings", "error");
@@ -93,10 +100,13 @@ const Scan = () => {
 
     const fetchRecentEntries = async () => {
         try {
+            setLoadingEntries(true);
             const res = await axios.get('/api/entries?date=today&limit=100');
             setRecentEntries(res.data);
         } catch (err) {
             console.error("Failed to fetch recent entries", err);
+        } finally {
+            setLoadingEntries(false);
         }
     };
 
@@ -353,13 +363,21 @@ const Scan = () => {
 
                 {/* Top Section */}
                 <div className="glass-panel p-6 md:p-8 text-center min-h-[400px] flex flex-col items-center justify-center relative overflow-hidden rounded-3xl border border-white/5 shadow-2xl">
+                    {orgName && (
+                        <div className="mb-4 relative z-10">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+                                <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></div>
+                                <span className="text-blue-400 font-semibold text-sm uppercase tracking-wider">{orgName}</span>
+                            </div>
+                        </div>
+                    )}
                     <h1 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 mb-2 relative z-10">SCAN YOUR ID CARD</h1>
                     <p className="text-gray-400 mb-8 text-base md:text-lg relative z-10">Click "Start Scanning" to capture and verify</p>
 
                     {!isCameraOn && !found && (
                         <button
-                            onClick={() => { setIsCameraOn(true); setScanResult(null); setDebugText(""); }} // Clear debug on start
-                            className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 md:px-10 py-3 md:py-4 rounded-full shadow-[0_0_20px_rgba(139,92,246,0.5)] hover:shadow-[0_0_30px_rgba(139,92,246,0.7)] hover:scale-105 transition-all text-lg md:text-xl font-bold flex items-center gap-3 relative z-10"
+                            onClick={() => { setIsCameraOn(true); setScanResult(null); setDebugText(""); }}
+                            className="bg-blue-700 hover:bg-blue-600 text-white px-10 md:px-12 py-4 md:py-5 rounded-xl font-bold text-lg md:text-xl flex items-center gap-3 relative z-10 transition-all shadow-md hover:shadow-lg border border-blue-500/30 animate-float"
                         >
                             <ScanIcon size={24} className="md:w-7 md:h-7" /> Start Scanning
                         </button>
@@ -487,36 +505,84 @@ const Scan = () => {
 
                 {/* Table Section */}
                 <div className="glass-panel rounded-xl border border-white/5 overflow-hidden">
-                    <div className="p-4 border-b border-white/10 bg-white/5 flex flex-col md:flex-row gap-4 justify-between items-center">
-                        <div className="flex-1 w-full md:max-w-md">
-                            <input
-                                type="text"
-                                placeholder="Search records..."
-                                className="w-full px-4 py-2 bg-black/20 border border-white/10 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none text-white placeholder-gray-500"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                        </div>
-                        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
-                            <div className="flex items-center gap-2">
-                                <span className="text-sm font-semibold text-gray-400">Hide Arrivals</span>
+                    <div className="p-6 border-b border-white/10 bg-gradient-to-br from-white/5 to-transparent">
+                        {/* Mobile Layout */}
+                        <div className="flex flex-col gap-4 lg:hidden">
+                            <div className="w-full">
+                                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Search Records</label>
+                                <input
+                                    type="text"
+                                    placeholder="Name, Roll No, or Hostel..."
+                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none text-white placeholder-gray-500 transition-all"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+                            <div className="flex items-center gap-3 justify-between">
+                                <div className="glass-panel px-3 py-2 rounded-xl border border-white/10 flex items-center gap-2 flex-shrink-0">
+                                    <span className="text-xs sm:text-sm font-semibold text-gray-300 whitespace-nowrap">Hide Arrivals</span>
+                                    <button
+                                        onClick={() => setHideArrivals(!hideArrivals)}
+                                        className={`w-11 h-5 sm:w-12 sm:h-6 rounded-full transition-all relative shadow-inner ${hideArrivals ? 'bg-indigo-600' : 'bg-gray-700'}`}
+                                    >
+                                        <span className={`absolute top-0.5 left-0.5 bg-white w-4 h-4 sm:w-5 sm:h-5 rounded-full transition-transform shadow-md ${hideArrivals ? 'translate-x-6' : ''}`} />
+                                    </button>
+                                </div>
+
                                 <button
-                                    onClick={() => setHideArrivals(!hideArrivals)}
-                                    className={`w-12 h-6 rounded-full transition-colors relative ${hideArrivals ? 'bg-indigo-600' : 'bg-gray-700'}`}
+                                    onClick={handleSendReminders}
+                                    disabled={sendingReminders}
+                                    className="px-3 sm:px-5 py-2 sm:py-2.5 bg-orange-800 hover:bg-orange-700 text-white rounded-xl font-semibold shadow-lg shadow-orange-600/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 sm:gap-2 border border-orange-500/20 text-xs sm:text-sm flex-shrink-0"
                                 >
-                                    <span className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${hideArrivals ? 'translate-x-6' : ''}`} />
+                                    <Mail size={16} className="sm:w-[18px] sm:h-[18px]" />
+                                    <span className="hidden xs:inline">{sendingReminders ? 'Sending...' : 'Send Reminders'}</span>
+                                    <span className="xs:hidden">{sendingReminders ? 'Sending...' : 'Reminders'}</span>
                                 </button>
                             </div>
+                        </div>
 
-                            {/* Send Reminders Button */}
-                            <button
-                                onClick={handleSendReminders}
-                                disabled={sendingReminders}
-                                className="ml-2 px-4 py-2 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white rounded-lg font-semibold shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                            >
-                                <Mail size={18} />
-                                {sendingReminders ? 'Sending...' : 'Reminders'}
-                            </button>
+                        {/* Desktop Layout */}
+                        <div className="hidden lg:flex items-center gap-6 justify-between">
+                            <div className="flex-1 max-w-sm">
+                                <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 block">Search Records</label>
+                                <input
+                                    type="text"
+                                    placeholder="Name, Roll No, or Hostel..."
+                                    className="w-full px-4 py-3 bg-black/30 border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none text-white placeholder-gray-500 transition-all"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
+
+                            {orgName && (
+                                <div className="flex-shrink-0">
+                                    <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                                        <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></div>
+                                        <span className="text-blue-400 font-bold text-base uppercase tracking-wider">{orgName}</span>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="flex items-center gap-4 flex-shrink-0">
+                                <div className="glass-panel px-4 py-2.5 rounded-xl border border-white/10 flex items-center gap-3">
+                                    <span className="text-sm font-semibold text-gray-300 whitespace-nowrap">Hide Arrivals</span>
+                                    <button
+                                        onClick={() => setHideArrivals(!hideArrivals)}
+                                        className={`w-12 h-6 rounded-full transition-all relative shadow-inner ${hideArrivals ? 'bg-indigo-600' : 'bg-gray-700'}`}
+                                    >
+                                        <span className={`absolute top-0.5 left-0.5 bg-white w-5 h-5 rounded-full transition-transform shadow-md ${hideArrivals ? 'translate-x-6' : ''}`} />
+                                    </button>
+                                </div>
+
+                                <button
+                                    onClick={handleSendReminders}
+                                    disabled={sendingReminders}
+                                    className="px-5 py-2.5 bg-orange-800 hover:bg-orange-700 text-white rounded-xl font-semibold shadow-lg shadow-orange-600/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 border border-orange-500/20 text-sm"
+                                >
+                                    <Mail size={18} />
+                                    {sendingReminders ? 'Sending...' : 'Send Reminders'}
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -530,7 +596,8 @@ const Scan = () => {
                                     <th className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider hidden sm:table-cell">Hostel</th>
                                     <th className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider hidden md:table-cell">Room</th>
                                     <th className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider hidden lg:table-cell">Mobile</th>
-                                    <th className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider">Time (Out)</th>
+                                    <th className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider">Leaving</th>
+                                    <th className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider">Arrival</th>
                                     <th className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider">Status</th>
                                 </tr>
                             </thead>
@@ -547,8 +614,27 @@ const Scan = () => {
                                             <td className="px-4 py-3 hidden sm:table-cell">{entry.student.hostel_name}</td>
                                             <td className="px-4 py-3 hidden md:table-cell">{entry.student.Room_no}</td>
                                             <td className="px-4 py-3 hidden lg:table-cell">{entry.student.mobile_no}</td>
-                                            <td className="px-4 py-3 text-gray-400">
-                                                {leaveDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            <td className="px-4 py-3 text-gray-300">
+                                                <div className="font-medium text-white">
+                                                    {leaveDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                                                </div>
+                                                <div className="text-gray-500 text-xs">
+                                                    {leaveDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3 text-gray-300">
+                                                {arrivalDate ? (
+                                                    <>
+                                                        <div className="font-medium text-white">
+                                                            {arrivalDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                                                        </div>
+                                                        <div className="text-gray-500 text-xs">
+                                                            {arrivalDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <span className="text-gray-600">-</span>
+                                                )}
                                             </td>
                                             <td className="px-4 py-3">
                                                 <span className={`px-2 py-1 rounded text-xs font-bold ${entry.status === 'In' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
@@ -558,9 +644,19 @@ const Scan = () => {
                                         </tr>
                                     );
                                 })}
-                                {filteredEntries.length === 0 && (
+                                {loadingEntries && filteredEntries.length === 0 && (
                                     <tr>
-                                        <td colSpan="8" className="px-6 py-8 text-center text-gray-500">
+                                        <td colSpan="9" className="px-6 py-12 text-center">
+                                            <div className="flex flex-col items-center gap-3">
+                                                <div className="w-8 h-8 border-3 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
+                                                <span className="text-gray-400 animate-pulse">Loading entries...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                                {!loadingEntries && filteredEntries.length === 0 && (
+                                    <tr>
+                                        <td colSpan="9" className="px-6 py-8 text-center text-gray-500">
                                             No entries found.
                                         </td>
                                     </tr>

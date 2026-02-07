@@ -19,6 +19,11 @@ const Members = () => {
     const orgId = localStorage.getItem("current-org-id");
 
     useEffect(() => {
+        // Scroll to top when page loads
+        window.scrollTo(0, 0);
+    }, []);
+
+    useEffect(() => {
         if (!orgId) {
             navigate("/portal");
             return;

@@ -152,3 +152,93 @@ export async function sendAttendanceReminderEmail(studentEmail, studentName, org
 
   await transporter.sendMail(mailOptions);
 }
+
+export async function sendFeedbackEmail(userName, userEmail, message) {
+  // Create transporter
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT || 587,
+    secure: process.env.EMAIL_PORT == 465,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const timestamp = new Date().toLocaleString('en-US', {
+    dateStyle: 'full',
+    timeStyle: 'long'
+  });
+
+  const mailOptions = {
+    from: `"JustScan Feedback System" <${process.env.EMAIL_USER}>`,
+    to: process.env.EMAIL_USER, // Send to admin email
+    replyTo: userEmail, // Allow admin to reply directly to user
+    subject: `New Feedback from ${userName}`,
+    html: `
+      <div style="
+        font-family: Arial, sans-serif; 
+        max-width: 600px; 
+        margin: 0 auto; 
+        background: #0f172a; 
+        padding: 28px; 
+        border-radius: 14px; 
+        border: 1px solid #1e293b;
+        color: #e5e7eb;
+      ">
+        <!-- Header -->
+        <div style="text-align: center; padding-bottom: 12px; border-bottom: 1px solid #1e293b;">
+          <h1 style="color: #38bdf8; margin: 0; font-size: 28px; font-weight: bold;">
+            JustScan Feedback
+          </h1>
+          <p style="color: #94a3b8; margin-top: 6px; font-size: 14px;">
+            New user feedback received
+          </p>
+        </div>
+
+        <!-- User Info -->
+        <div style="margin: 24px 0; padding: 16px; background: #020617; border-radius: 8px; border: 1px solid #334155;">
+          <p style="margin: 0 0 8px 0; color: #94a3b8; font-size: 13px;">FROM:</p>
+          <p style="margin: 0; font-size: 16px; color: #e5e7eb;">
+            <strong>${userName}</strong>
+          </p>
+          <p style="margin: 4px 0 0 0; font-size: 14px; color: #38bdf8;">
+            ${userEmail}
+          </p>
+        </div>
+
+        <!-- Timestamp -->
+        <p style="font-size: 13px; color: #64748b; margin: 12px 0;">
+          Received: ${timestamp}
+        </p>
+
+        <!-- Message -->
+        <div style="margin: 20px 0;">
+          <p style="margin: 0 0 8px 0; color: #94a3b8; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">
+            Message:
+          </p>
+          <div style="
+            background: #020617; 
+            padding: 18px; 
+            border-radius: 8px; 
+            border-left: 4px solid #38bdf8;
+            border: 1px solid #334155;
+          ">
+            <p style="margin: 0; color: #e5e7eb; font-size: 15px; line-height: 1.6; white-space: pre-wrap;">
+${message}
+            </p>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <hr style="border: 0; border-top: 1px solid #1e293b; margin: 24px 0;">
+        <p style="color: #64748b; font-size: 12px; text-align: center;">
+          This is an automated message from <strong>JustScan</strong> Feedback System.<br>
+          Reply to this email to respond directly to the user.
+        </p>
+      </div>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+}
