@@ -44,15 +44,15 @@ const Navbar = ({ onLoginClick }) => {
 
         {/* Center Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          <button onClick={() => { navigate("/"); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+          <button onClick={() => { navigate("/"); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-lg font-semibold text-gray-400 hover:text-white transition-colors">
             Home
           </button>
 
-          <a href="/#features" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+          <a href="/#features" className="text-lg font-semibold text-gray-400 hover:text-white transition-colors">
             Features
           </a>
 
-          <a href="/#org-section" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+          <a href="/#org-section" className="text-lg font-semibold text-gray-400 hover:text-white transition-colors">
             Organizations
           </a>
         </nav>

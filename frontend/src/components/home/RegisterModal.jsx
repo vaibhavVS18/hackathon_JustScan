@@ -133,7 +133,7 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
       onClick={onClose}
     >
       <div
-        className="glass-panel text-white p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md relative my-8 border border-white/10"
+        className="glass-panel w-full max-w-md rounded-2xl relative flex flex-col shadow-[0_0_50px_rgba(139,92,246,0.15)] animate-in fade-in zoom-in-95 duration-200 border border-white/10 p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -145,7 +145,7 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
         </button>
 
         {/* Header */}
-        <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-white">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
           Create Account
         </h2>
 
@@ -176,7 +176,7 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
                 id="email"
                 placeholder="Enter your email"
                 required
-                className={`w-full py-3 px-4 rounded-xl bg-white/5 border text-white placeholder-gray-500 text-sm sm:text-base
+                className={`w-full py-3 px-4 rounded-xl bg-black/20 border text-white placeholder-gray-500 text-sm sm:text-base
                             ${error ? "border-red-500/50" : "border-white/10"} focus:outline-none focus:ring-2
                             ${error ? "focus:ring-red-500/50" : "focus:ring-indigo-500/50"} transition-all 
                         `}
@@ -211,7 +211,7 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
                   type="email"
                   value={email}
                   disabled
-                  className="flex-1 py-3 px-4 rounded-xl bg-white/5 border border-white/10 text-gray-400 text-sm sm:text-base cursor-not-allowed"
+                  className="flex-1 py-3 px-4 rounded-xl bg-black/20 border border-white/10 text-gray-400 text-sm sm:text-base cursor-not-allowed"
                 />
                 <button
                   type="button"
@@ -243,7 +243,7 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
                 required
                 maxLength={6}
                 pattern="[0-9]{6}"
-                className={`w-full py-3 px-4 rounded-xl bg-white/5 border text-white placeholder-gray-500 text-sm sm:text-base tracking-widest text-center font-bold font-mono
+                className={`w-full py-3 px-4 rounded-xl bg-black/20 border text-white placeholder-gray-500 text-sm sm:text-base tracking-widest text-center font-bold font-mono
                             ${error ? "border-red-500/50" : "border-white/10"} focus:outline-none focus:ring-2
                             ${error ? "focus:ring-red-500/50" : "focus:ring-indigo-500/50"} transition-all 
                         `}
@@ -282,7 +282,7 @@ const RegisterModal = ({ isOpen, onClose, onLoginClick }) => {
                 id="password"
                 placeholder="Enter your password"
                 required
-                className={`w-full py-3 px-4 rounded-xl bg-white/5 border text-white placeholder-gray-500 text-sm sm:text-base
+                className={`w-full py-3 px-4 rounded-xl bg-black/20 border text-white placeholder-gray-500 text-sm sm:text-base
                             ${error ? "border-red-500/50" : "border-white/10"} focus:outline-none focus:ring-2
                             ${error ? "focus:ring-red-500/50" : "focus:ring-indigo-500/50"} transition-all 
                         `}

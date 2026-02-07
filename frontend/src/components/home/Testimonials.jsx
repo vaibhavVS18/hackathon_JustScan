@@ -29,20 +29,14 @@ const testimonials = [
 
 const Testimonials = () => {
     return (
-        <section className="py-10 relative overflow-hidden bg-[#050511]">
-            {/* Background Gradients */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute top-1/2 left-0 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl -translate-y-1/2"></div>
-                <div className="absolute top-1/2 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -translate-y-1/2"></div>
-            </div>
-
+        <section className="py-20 relative overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 mb-12 relative z-10 text-center">
                 <h2 className="text-3xl md:text-5xl font-bold mb-6">
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500 font-display">
                         Trusted by Modern Campuses
                     </span>
                 </h2>
-                <p className="text-gray-400 max-w-xl mx-auto">
+                <p className="text-gray-400 max-w-xl mx-auto text-lg">
                     Join hundreds of institutions securing their premises with JustScan.
                 </p>
             </div>
@@ -50,8 +44,8 @@ const Testimonials = () => {
             {/* Marquee Container */}
             <div className="relative w-full overflow-hidden">
                 {/* Gradient Masks for smooth fade out at edges */}
-                <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#050511] to-transparent z-20 pointer-events-none"></div>
-                <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#050511] to-transparent z-20 pointer-events-none"></div>
+                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#05020e] to-transparent z-20 pointer-events-none"></div>
+                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#05020e] to-transparent z-20 pointer-events-none"></div>
 
                 <div className="flex w-max animate-scroll gap-6 hover:[animation-play-state:paused]">
                     {/* Duplicate list for infinite loop */}
