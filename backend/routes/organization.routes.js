@@ -8,7 +8,7 @@ const router = Router();
 
 router.get("/", getAllOrganizations);
 router.post("/verify", optionalAuthUser, verifyAccessCode);
-router.post("/analyze-id-card-public", upload.single('idCardImage'), analyzeIdCard);
+router.post("/analyze-id-card", upload.single('idCardImage'), analyzeIdCard);
 
 // Temporary route to create orgs (protected)
 router.post("/create", authUser, createOrganizationVal);

@@ -28,12 +28,10 @@ const studentSchema = new mongoose.Schema({
     },
     hostel_name: {
         type: String,
-        required: true,
     },
     Room_no: {
         type: Number,
         default: 1,
-        required: true,
     },
     email: {
         type: String,

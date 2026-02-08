@@ -12,6 +12,7 @@ const Portal = () => {
     const { addToast } = useToast();
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         const storedName = localStorage.getItem("current-org-name");
         const orgId = localStorage.getItem("current-org-id");
 

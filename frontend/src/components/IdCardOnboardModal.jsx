@@ -83,9 +83,9 @@ const IdCardOnboardModal = ({ isOpen, onClose, onAnalysisComplete }) => {
                 <div className="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
                     <div>
                         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                            <Shield className="text-teal-400" /> AI ID Card Analysis
+                            <Shield className="text-teal-400" /> ID Card Verification
                         </h2>
-                        <p className="text-gray-400 text-sm">Upload an ID card to extract validation keywords automatically.</p>
+                        <p className="text-gray-400 text-sm">Upload an ID card for validation and verification.</p>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full text-gray-400 hover:text-white transition">
                         <X size={24} />
@@ -135,7 +135,7 @@ const IdCardOnboardModal = ({ isOpen, onClose, onAnalysisComplete }) => {
                                     ${loading ? "bg-gray-700 cursor-not-allowed" : "bg-gradient-to-r from-teal-500 to-purple-600 hover:opacity-90"}
                                 `}
                             >
-                                {loading ? <Loader className="animate-spin" size={20} /> : <span className="flex items-center gap-2">Analyze with AI <FileText size={18} /></span>}
+                                {loading ? <Loader className="animate-spin" size={20} /> : <span className="flex items-center gap-2">Verify ID Card <FileText size={18} /></span>}
                             </button>
                         )}
                     </div>
@@ -144,49 +144,30 @@ const IdCardOnboardModal = ({ isOpen, onClose, onAnalysisComplete }) => {
                     <div className="bg-white/5 rounded-2xl p-6 border border-white/10 flex flex-col">
                         <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                             <span className="w-1.5 h-6 bg-purple-500 rounded-full"></span>
-                            Analysis Results
+                            Verification Results
                         </h3>
 
                         {!analysis ? (
                             <div className="flex-1 flex flex-col items-center justify-center text-gray-500 text-center opacity-60">
                                 <FileText size={48} className="mb-4 text-gray-700" />
-                                <p>Results will appear here after analysis.</p>
+                                <p>Results will appear here after verification.</p>
                             </div>
                         ) : (
                             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <div className={`p-4 rounded-xl border ${analysis.is_id_card ? "bg-green-500/10 border-green-500/30" : "bg-red-500/10 border-red-500/30"}`}>
-                                    <div className="flex justify-between items-center mb-1">
-                                        <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Status</span>
-                                        <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Confidence</span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className={`text-lg font-bold ${analysis.is_id_card ? "text-green-400" : "text-red-400"}`}>
-                                            {analysis.is_id_card ? "Valid ID Card" : "Invalid Document"}
-                                        </span>
-                                        <span className="text-2xl font-black text-white">{analysis.confidence_score}%</span>
-                                    </div>
+                                <div className={`p-6 rounded-xl border flex flex-col items-center justify-center text-center ${analysis.is_id_card ? "bg-green-500/10 border-green-500/30" : "bg-red-500/10 border-red-500/30"}`}>
+                                    <span className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Verification Status</span>
+                                    <span className={`text-2xl font-bold ${analysis.is_id_card ? "text-green-400" : "text-red-400"}`}>
+                                        {analysis.is_id_card ? "Valid" : "Invalid"} {analysis.confidence_score}%
+                                    </span>
                                 </div>
 
                                 {analysis.is_id_card && (
-                                    <>
-                                        <div>
-                                            <p className="text-xs text-gray-400 uppercase font-bold mb-2">Detected Keywords</p>
-                                            <div className="flex flex-wrap gap-2">
-                                                {analysis.signature?.keywords?.map((k, i) => (
-                                                    <span key={i} className="bg-purple-500/20 text-purple-200 px-3 py-1 rounded-lg text-sm border border-purple-500/30">
-                                                        {k}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        <button
-                                            onClick={handleConfirm}
-                                            className="w-full mt-auto py-3 bg-white text-black rounded-xl font-bold hover:bg-gray-200 transition flex items-center justify-center gap-2"
-                                        >
-                                            <Check size={20} /> Use These Keywords
-                                        </button>
-                                    </>
+                                    <button
+                                        onClick={handleConfirm}
+                                        className="w-full mt-auto py-3 bg-white text-black rounded-xl font-bold hover:bg-gray-200 transition flex items-center justify-center gap-2"
+                                    >
+                                        <Check size={20} /> Confirm Verification
+                                    </button>
                                 )}
                             </div>
                         )}

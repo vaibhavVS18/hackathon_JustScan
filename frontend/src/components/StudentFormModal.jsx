@@ -186,7 +186,6 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit = null, onSuccess }) 
                                         onChange={handleChange}
                                         className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all"
                                         placeholder="e.g. Bhutagni"
-                                        required
                                     />
                                 </div>
 
@@ -201,7 +200,6 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit = null, onSuccess }) 
                                         onChange={handleChange}
                                         className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all"
                                         placeholder="101"
-                                        required
                                     />
                                 </div>
                             </div>
