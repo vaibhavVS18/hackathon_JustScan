@@ -132,7 +132,7 @@ const IdCardOnboardModal = ({ isOpen, onClose, onAnalysisComplete }) => {
                                 onClick={analyzeImage}
                                 disabled={loading}
                                 className={`w-full py-3 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all
-                                    ${loading ? "bg-gray-700 cursor-not-allowed" : "bg-gradient-to-r from-teal-500 to-purple-600 hover:opacity-90"}
+                                    ${loading ? "bg-gray-700 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-500/20"}
                                 `}
                             >
                                 {loading ? <Loader className="animate-spin" size={20} /> : <span className="flex items-center gap-2">Verify ID Card <FileText size={18} /></span>}
