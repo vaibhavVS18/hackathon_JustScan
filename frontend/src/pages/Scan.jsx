@@ -314,13 +314,6 @@ const Scan = () => {
         }
     };
 
-    const speak = (text) => {
-        if ('speechSynthesis' in window) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            window.speechSynthesis.speak(utterance);
-        }
-    };
-
     const handleScanSuccess = async (rollNo) => {
         setFound(true);
         setIsCameraOn(false);
@@ -337,16 +330,6 @@ const Scan = () => {
             });
             fetchRecentEntries();
             addToast(`Scan Successful: ${res.data.student.name}`, 'success');
-
-            // Text-to-Speech Feedback
-            const studentName = res.data.student.name;
-            const entryStatus = res.data.entry.status; // 'In' or 'Out'
-
-            if (entryStatus === 'In') {
-                speak(`Welcome back ${studentName}`);
-            } else if (entryStatus === 'Out') {
-                speak(`Goodbye ${studentName}`);
-            }
 
         } catch (err) {
             setScanResult({
